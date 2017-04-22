@@ -1,0 +1,24 @@
+
+ Fetch date and temperature from temperature_data where zip code is greater than
+   300000 and less than 399999.
+create table temprature(tdate timestamp, pin int, tmp int) row format delimited fields terminated by ',' stored as textfile;
+
+load local inpath '/home/jayant/Downloads/dataset_Session 14.txt' into table temprature;
+
+select tdate and tmp from temprature where pin BETWEEN 300001, 399998;
+
+ Calculate maximum temperature corresponding to every year from temperature_data
+   table.
+select MAX(tem) from temprature where (select Distinct year from temprature);
+
+ Calculate maximum temperature from temperature_data table corresponding to those
+   years which have at least 2 entries in the table.
+select MAX(tmp) from temprature where count(year)>2;
+
+ Create a view on the top of last query, name it temperature_data_vw.
+create view temperature_data_vw as select MAX(tmp) from temprature where count(year)>2;
+ 
+ Export contents from temperature_data_vw to a file in local file system, such that each
+   file is '|' delimited.
+create table temperature_data_vw row format delimited fields terminated by '|' as select * from temprature;
+
